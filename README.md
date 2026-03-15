@@ -1,6 +1,6 @@
-# MkDocs CRD Plugin
+# MkDocs CRD Viewer
 
-`mkdocs-crd-plugin` renders Kubernetes CRD schemas as interactive, expandable tree views inside MkDocs pages.
+`mkdocs-crd-viewer` renders Kubernetes CRD schemas as interactive, expandable tree views inside MkDocs pages.
 
 The package provides:
 - `crd-viewer` MkDocs plugin for CSS/JS asset wiring.
@@ -15,7 +15,7 @@ uv sync
 Or install directly from GitHub with `uv add`:
 
 ```bash
-uv add "mkdocs-crd-plugin @ git+https://github.com/FloSch62/mkdocs-crd-plugin@main"
+uv add "mkdocs-crd-viewer @ git+https://github.com/eda-labs/mkdocs-crd-viewer@main"
 ```
 
 Replace `@main` with a tag if you want a fixed release (for example `@v0.1.0`).
@@ -30,7 +30,7 @@ plugins:
   - crd-viewer
   - macros:
       modules:
-        - mkdocs_crd_plugin.macros
+        - mkdocs_crd_viewer.macros
 ```
 
 If you need custom Jinja delimiters, the demo config in `demo/mkdocs.yml` shows a working setup with `-{{ ... }}-`.
@@ -79,7 +79,7 @@ Collapsed/spec-only view:
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `asset_dir` | `str` | `assets/mkdocs-crd-plugin` | Output path (inside `site_dir`) for `crd-viewer.css` and `crd-viewer.js`. |
+| `asset_dir` | `str` | `assets/mkdocs-crd-viewer` | Output path (inside `site_dir`) for `crd-viewer.css` and `crd-viewer.js`. |
 
 ## Demo and Tests
 

@@ -4,7 +4,7 @@ import textwrap
 from bs4 import BeautifulSoup
 import pytest
 
-from mkdocs_crd_plugin.core import CrdRenderError, load_crd_view, render_crd_viewer
+from mkdocs_crd_viewer.core import CrdRenderError, load_crd_view, render_crd_viewer
 
 
 def write_file(path: Path, content: str) -> None:

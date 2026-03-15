@@ -67,7 +67,7 @@ Add the plugin to your `mkdocs.yml` and call the macro from any page:
       - crd-viewer
       - macros:
           modules:
-            - mkdocs_crd_plugin.macros
+            - mkdocs_crd_viewer.macros
     ```
 
 | Parameter      | Type   | Default          | Description                               |

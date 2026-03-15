@@ -14,7 +14,7 @@ class CrdViewerPlugin(BasePlugin):
     """Copy bundled assets into the built site and register them with MkDocs."""
 
     config_scheme = (
-        ("asset_dir", c.Type(str, default="assets/mkdocs-crd-plugin")),
+        ("asset_dir", c.Type(str, default="assets/mkdocs-crd-viewer")),
     )
 
     def on_config(self, config):  # type: ignore[override]
@@ -40,7 +40,7 @@ class CrdViewerPlugin(BasePlugin):
         destination_dir = site_dir / asset_dir
         destination_dir.mkdir(parents=True, exist_ok=True)
 
-        asset_root = resources.files("mkdocs_crd_plugin.assets")
+        asset_root = resources.files("mkdocs_crd_viewer.assets")
         for asset_name in ("crd-viewer.css", "crd-viewer.js"):
             source = asset_root.joinpath(asset_name)
             with resources.as_file(source) as source_path:

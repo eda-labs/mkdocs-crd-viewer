@@ -1,4 +1,4 @@
-site_name: MkDocs CRD Plugin
+site_name: MkDocs CRD Viewer
 site_description: Render Kubernetes CRD schemas as interactive, expandable tree views
 docs_dir: docs
 site_dir: site
@@ -54,4 +54,4 @@ plugins:
       j2_variable_start_string: "-{{"
       j2_variable_end_string: "}}-"
       modules:
-        - mkdocs_crd_plugin.macros
+        - mkdocs_crd_viewer.macros

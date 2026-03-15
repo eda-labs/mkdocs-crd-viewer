@@ -64,5 +64,5 @@ def test_demo_site_builds(tmp_path: Path) -> None:
 
     assets = {tag.get("href") for tag in soup.select('link[rel="stylesheet"]')}
     scripts = {tag.get("src") for tag in soup.select("script[src]")}
-    assert "assets/mkdocs-crd-plugin/crd-viewer.css" in assets
-    assert "assets/mkdocs-crd-plugin/crd-viewer.js" in scripts
+    assert "assets/mkdocs-crd-viewer/crd-viewer.css" in assets
+    assert "assets/mkdocs-crd-viewer/crd-viewer.js" in scripts

@@ -3,7 +3,7 @@ requires = ["hatchling>=1.25.0"]
 build-backend = "hatchling.build"
 
 [project]
-name = "mkdocs-crd-plugin"
+name = "mkdocs-crd-viewer"
 version = "0.1.0"
 description = "MkDocs plugin and macros helper for rendering Kubernetes CRD schemas as interactive trees."
 readme = "README.md"
@@ -26,7 +26,7 @@ dev = [
 ]
 
 [project.entry-points."mkdocs.plugins"]
-crd-viewer = "mkdocs_crd_plugin.plugin:CrdViewerPlugin"
+crd-viewer = "mkdocs_crd_viewer.plugin:CrdViewerPlugin"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
