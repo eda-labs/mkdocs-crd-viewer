@@ -75,8 +75,9 @@ Add the plugin to your `mkdocs.yml` and call the macro from any page:
 | `path`         | string | —                | Path to the CRD YAML file                 |
 | `version`      | string | storage version  | CRD version to render                     |
 | `title`        | string | kind name        | Display title                             |
-| `collapsed`    | bool   | `False`          | Wrap in a collapsible `<details>` element |
+| `collapsed`    | bool   | `False`          | Start the viewer in a collapsed state     |
 | `show_status`  | bool   | `True`           | Include the status section                |
+| `copy_skeleton`| bool   | `True`           | Show icon-only copy action with required/optional YAML comments |
 
 ### Settings preview
 

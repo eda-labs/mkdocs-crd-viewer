@@ -40,7 +40,7 @@ If you need custom Jinja delimiters, the demo config in `demo/mkdocs.yml` shows 
 There is currently one macro:
 
 ```python
-crd_viewer(path, version=None, title=None, collapsed=False, show_status=True)
+crd_viewer(path, version=None, title=None, collapsed=False, show_status=True, copy_skeleton=True)
 ```
 
 | Parameter | Type | Default | Description |
@@ -48,8 +48,9 @@ crd_viewer(path, version=None, title=None, collapsed=False, show_status=True)
 | `path` | `str` | required | Relative or absolute path to a CRD YAML file. Relative paths resolve from the MkDocs project root. |
 | `version` | `str \| None` | storage version | CRD version to render. Falls back to storage, then served, then first entry. |
 | `title` | `str \| None` | selected kind | Override the viewer title. |
-| `collapsed` | `bool` | `False` | Render inside a collapsed `<details>` wrapper. |
+| `collapsed` | `bool` | `False` | Render the viewer in an initially collapsed state. |
 | `show_status` | `bool` | `True` | Include the `status` schema section when available. |
+| `copy_skeleton` | `bool` | `True` | Show an icon-only copy action that copies a verbose scaffold with aligned `# required` / `# optional` comments (status is never included). |
 
 Each file should contain exactly one `CustomResourceDefinition` document.
 

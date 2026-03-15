@@ -1,4 +1,61 @@
 (function () {
+  function decodeBase64(value) {
+    if (!value) {
+      return "";
+    }
+    try {
+      return atob(value);
+    } catch (error) {
+      return "";
+    }
+  }
+
+  function setCopyFeedback(button, message, state) {
+    if (!button) {
+      return;
+    }
+
+    var defaultLabel =
+      button.dataset.defaultLabel ||
+      "Copy YAML skeleton (Shift+Click for full template)";
+    button.dataset.defaultLabel = defaultLabel;
+    button.setAttribute("aria-label", message);
+    button.setAttribute("title", message);
+    button.dataset.copyState = state;
+
+    if (button._crdCopyTimer) {
+      clearTimeout(button._crdCopyTimer);
+    }
+    button._crdCopyTimer = setTimeout(function () {
+      button.setAttribute("aria-label", defaultLabel);
+      button.setAttribute("title", defaultLabel);
+      delete button.dataset.copyState;
+      button._crdCopyTimer = null;
+    }, 1800);
+  }
+
+  function copySkeleton(viewer, button, fullTemplate) {
+    var payloadKey = fullTemplate ? "crdSkeletonVerbose" : "crdSkeleton";
+    var payload = decodeBase64(viewer.dataset[payloadKey] || viewer.dataset.crdSkeleton);
+    if (!payload || !navigator.clipboard || !navigator.clipboard.writeText) {
+      setCopyFeedback(button, "Copy failed", "error");
+      return;
+    }
+
+    navigator.clipboard.writeText(payload).then(
+      function () {
+        setCopyFeedback(
+          button,
+          fullTemplate ? "Copied full YAML template" : "Copied YAML skeleton",
+          "success"
+        );
+      },
+      function () {
+        setCopyFeedback(button, "Copy failed", "error");
+      }
+    );
+  }
+
   function setNodeExpanded(node, expanded) {
     node.dataset.open = expanded ? "true" : "false";
 
@@ -90,6 +147,7 @@
 
     viewer.dataset.crdViewerReady = "true";
     var button = viewer.querySelector("[data-crd-toggle-all]");
+    var copyButton = viewer.querySelector("[data-crd-copy-skeleton]");
     var nodes = Array.prototype.slice.call(
       viewer.querySelectorAll("[data-crd-node]")
     );
@@ -115,12 +173,19 @@
       });
     }
 
+    if (copyButton) {
+      copyButton.addEventListener("click", function (event) {
+        copySkeleton(viewer, copyButton, event.shiftKey === true);
+      });
+    }
+
     /* Collapsible mode: click header to toggle */
     if ("crdCollapsible" in viewer.dataset) {
       var header = viewer.querySelector(".crd-viewer__header");
       if (header) {
         header.addEventListener("click", function (e) {
-          if (e.target.closest("[data-crd-toggle-all]")) return;
+          if (e.target.closest("[data-crd-toggle-all], [data-crd-copy-skeleton]"))
+            return;
           if (viewer.dataset.crdCollapsed === "true") {
             delete viewer.dataset.crdCollapsed;
           } else {

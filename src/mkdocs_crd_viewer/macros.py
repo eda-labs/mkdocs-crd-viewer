@@ -18,6 +18,7 @@ def define_env(env: Any) -> None:
         title: str | None = None,
         collapsed: bool = False,
         show_status: bool = True,
+        copy_skeleton: bool = True,
     ) -> str:
         project_root = _project_root(env)
         return render_crd_viewer(
@@ -27,6 +28,7 @@ def define_env(env: Any) -> None:
             title=title,
             collapsed=collapsed,
             show_status=show_status,
+            copy_skeleton=copy_skeleton,
         )
 
 

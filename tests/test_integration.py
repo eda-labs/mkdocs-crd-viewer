@@ -37,6 +37,9 @@ def test_demo_site_builds(tmp_path: Path) -> None:
     # Top viewer: full inline with spec + status
     top_viewer = viewers[0]
     assert top_viewer.select_one("[data-crd-toggle-all]") is not None
+    assert top_viewer.select_one("[data-crd-copy-skeleton]") is not None
+    assert top_viewer.get("data-crd-skeleton")
+    assert top_viewer.get("data-crd-skeleton-verbose")
     assert "SPEC" in top_viewer.get_text()
     assert "STATUS" in top_viewer.get_text()
     assert "Fabric" in top_viewer.get_text()
@@ -54,10 +57,10 @@ def test_demo_site_builds(tmp_path: Path) -> None:
         assert "STATUS" not in viewer.get_text()
 
     # Collapsed render should exist and be spec-only.
-    collapsed_wrapper = soup.select_one("details.crd-viewer__wrapper")
-    assert collapsed_wrapper is not None
-    collapsed_viewer = collapsed_wrapper.select_one("[data-crd-viewer-root]")
+    collapsed_viewer = next((viewer for viewer in viewers if "Collapsed + spec only" in viewer.get_text()), None)
     assert collapsed_viewer is not None
+    assert collapsed_viewer.has_attr("data-crd-collapsible")
+    assert collapsed_viewer.get("data-crd-collapsed") == "true"
     assert "Collapsed + spec only" in collapsed_viewer.get_text()
     assert "SPEC" in collapsed_viewer.get_text()
     assert "STATUS" not in collapsed_viewer.get_text()
