@@ -410,9 +410,18 @@ def _render_node(*, viewer_id: str, node: FieldNode) -> str:
 </div>
 """.strip()
 
+    children_html = ""
     if node.children:
-        children_html = "\n".join(_render_node(viewer_id=viewer_id, node=child) for child in node.children)
-        return f"""
+        nested_nodes = "\n".join(_render_node(viewer_id=viewer_id, node=child) for child in node.children)
+        children_html = f"""
+<ul class="crd-viewer__children">
+  {nested_nodes}
+</ul>
+""".strip()
+
+    content_html = "\n".join(part for part in (body_html, children_html) if part)
+    content_block = f'<div class="crd-viewer__content" id="{content_id}" hidden>{content_html}</div>'
+    return f"""
 <li class="crd-viewer__item" id="{node_id}">
   <div class="crd-viewer__node" data-crd-node data-open="false">
     <div class="crd-viewer__row">
@@ -429,25 +438,8 @@ def _render_node(*, viewer_id: str, node: FieldNode) -> str:
       </button>
       {anchor_html}
     </div>
-    <div class="crd-viewer__content" id="{content_id}" hidden>
-      {body_html}
-      <ul class="crd-viewer__children">
-        {children_html}
-      </ul>
-    </div>
+    {content_block}
   </div>
-</li>
-""".strip()
-
-    return f"""
-<li class="crd-viewer__item crd-viewer__item--leaf" id="{node_id}">
-  <div class="crd-viewer__leaf-row">
-    <span class="crd-viewer__leaf-spacer" aria-hidden="true"></span>
-    <span class="crd-viewer__label">{label}{required_html}</span>
-    {badge_html}
-    {anchor_html}
-  </div>
-  {body_html}
 </li>
 """.strip()
 

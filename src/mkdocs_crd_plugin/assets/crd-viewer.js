@@ -13,6 +13,10 @@
       if (expanded) {
         content.hidden = false;
         var height = content.scrollHeight;
+        if (height === 0) {
+          content.style.maxHeight = "none";
+          return;
+        }
         content.style.maxHeight = "0px";
         content.offsetHeight; /* force reflow */
         content.style.maxHeight = height + "px";
@@ -26,6 +30,11 @@
         );
       } else {
         var height = content.scrollHeight;
+        if (height === 0) {
+          content.hidden = true;
+          content.style.maxHeight = "";
+          return;
+        }
         content.style.maxHeight = height + "px";
         content.offsetHeight; /* force reflow */
         content.style.maxHeight = "0px";
