@@ -12,6 +12,14 @@ The package provides:
 uv sync
 ```
 
+Or install directly from GitHub with `uv add`:
+
+```bash
+uv add "mkdocs-crd-plugin @ git+https://github.com/FloSch62/mkdocs-crd-plugin@main"
+```
+
+Replace `@main` with a tag if you want a fixed release (for example `@v0.1.0`).
+
 ## Configure
 
 In your `mkdocs.yml`:
