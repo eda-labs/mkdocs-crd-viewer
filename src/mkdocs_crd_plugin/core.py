@@ -348,28 +348,21 @@ def _render_view(view: CrdView, *, title: str | None, collapsed: bool) -> str:
     meta = f"{view.group} / {view.version}"
     sections_html = "\n".join(_render_section(viewer_id=viewer_id, section=section) for section in view.sections)
 
-    viewer_html = f"""
-<section class="crd-viewer" data-crd-viewer-root id="{viewer_id}">
+    header_html = f"""
   <div class="crd-viewer__header">
     <div>
       <p class="crd-viewer__title">{html.escape(display_title)}</p>
       <p class="crd-viewer__meta">{html.escape(meta)}</p>
     </div>
     <button type="button" class="crd-viewer__toggle" data-crd-toggle-all data-expanded="false">Expand All</button>
-  </div>
+  </div>"""
+
+    collapsed_attr = ' data-crd-collapsible data-crd-collapsed="true"' if collapsed else ""
+    return f"""
+<section class="crd-viewer" data-crd-viewer-root{collapsed_attr} id="{viewer_id}">
+  {header_html}
   {sections_html}
 </section>
-""".strip()
-
-    if not collapsed:
-        return viewer_html
-
-    summary = html.escape(display_title)
-    return f"""
-<details class="crd-viewer__wrapper">
-  <summary>{summary}</summary>
-  {viewer_html}
-</details>
 """.strip()
 
 

@@ -115,6 +115,21 @@
       });
     }
 
+    /* Collapsible mode: click header to toggle */
+    if ("crdCollapsible" in viewer.dataset) {
+      var header = viewer.querySelector(".crd-viewer__header");
+      if (header) {
+        header.addEventListener("click", function (e) {
+          if (e.target.closest("[data-crd-toggle-all]")) return;
+          if (viewer.dataset.crdCollapsed === "true") {
+            delete viewer.dataset.crdCollapsed;
+          } else {
+            viewer.dataset.crdCollapsed = "true";
+          }
+        });
+      }
+    }
+
     syncButton(viewer);
   }
 
