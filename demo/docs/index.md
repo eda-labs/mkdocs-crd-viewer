@@ -121,3 +121,8 @@ Use this section to compare how each setting changes the rendered output.
 -{{% endraw %}}-
 
 -{{ crd_viewer("crds/fabrics.eda.nokia.com.yaml", title="Collapsed + spec only", collapsed=True, show_status=False) }}-
+
+## Collapsed CRD list
+
+-{{ crd_viewer("crds/fabrics.eda.nokia.com.yaml", title="Fabric CRD", collapsed=True) }}-
+-{{ crd_viewer("crds/interfaces.eda.nokia.com.yaml", title="Interface CRD", collapsed=True) }}-
