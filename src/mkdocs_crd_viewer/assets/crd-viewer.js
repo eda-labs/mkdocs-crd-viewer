@@ -133,8 +133,60 @@
     syncButton(viewer);
   }
 
+  function navigateToHash() {
+    var hash = location.hash;
+    if (!hash || hash.length < 2) return;
+
+    var target;
+    try {
+      target = document.querySelector(hash);
+    } catch (_) {
+      return;
+    }
+    if (!target) return;
+
+    var viewer = target.closest("[data-crd-viewer-root]");
+    if (!viewer || viewer.dataset.crdViewerReady !== "true") return;
+
+    if (viewer.dataset.crdCollapsed === "true") {
+      delete viewer.dataset.crdCollapsed;
+    }
+
+    var ancestor = target.parentElement;
+    while (ancestor && ancestor !== viewer) {
+      if (ancestor.hasAttribute("data-crd-node")) {
+        setNodeExpandedImmediate(ancestor, true);
+      }
+      ancestor = ancestor.parentElement;
+    }
+
+    var ownNode = target.querySelector(":scope > [data-crd-node]");
+    if (ownNode) {
+      setNodeExpandedImmediate(ownNode, true);
+    }
+
+    syncButton(viewer);
+
+    target.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    var row =
+      target.querySelector(":scope > .crd-viewer__node > .crd-viewer__row") ||
+      target.querySelector(":scope > .crd-viewer__row");
+    if (row) {
+      row.classList.add("crd-viewer__row--highlight");
+      function clearHighlight(e) {
+        if (e.target.closest(".crd-viewer__row") && e.target.closest(".crd-viewer__row") !== row) {
+          row.classList.remove("crd-viewer__row--highlight");
+          viewer.removeEventListener("mouseover", clearHighlight);
+        }
+      }
+      viewer.addEventListener("mouseover", clearHighlight);
+    }
+  }
+
   function init(root) {
     root.querySelectorAll("[data-crd-viewer-root]").forEach(initViewer);
+    navigateToHash();
   }
 
   if (document.readyState === "loading") {
@@ -144,6 +196,32 @@
   } else {
     init(document);
   }
+
+  window.addEventListener("hashchange", navigateToHash);
+
+  document.addEventListener("click", function (e) {
+    var anchor = e.target.closest(".crd-viewer__anchor");
+    if (!anchor) return;
+    var href = anchor.getAttribute("href");
+    if (!href || href.charAt(0) !== "#") return;
+    e.preventDefault();
+    history.replaceState(null, "", href);
+    navigateToHash();
+
+    var url = location.origin + location.pathname + href;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url);
+    } else {
+      var ta = document.createElement("textarea");
+      ta.value = url;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+    }
+  });
 
   if (
     typeof document$ !== "undefined" &&
