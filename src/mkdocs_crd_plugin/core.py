@@ -63,8 +63,6 @@ def render_crd_viewer(
     project_root: Path,
     source: str,
     *,
-    group: str | None = None,
-    kind: str | None = None,
     version: str | None = None,
     title: str | None = None,
     collapsed: bool = False,
@@ -73,15 +71,13 @@ def render_crd_viewer(
     """Render a CRD from disk into HTML suitable for MkDocs pages."""
 
     source_path = _resolve_source_path(project_root, source)
-    view = load_crd_view(source_path, group=group, kind=kind, version=version, show_status=show_status)
+    view = load_crd_view(source_path, version=version, show_status=show_status)
     return _render_view(view, title=title, collapsed=collapsed)
 
 
 def load_crd_view(
     source_path: Path,
     *,
-    group: str | None = None,
-    kind: str | None = None,
     version: str | None = None,
     show_status: bool = True,
 ) -> CrdView:
@@ -97,30 +93,17 @@ def load_crd_view(
     if not crds:
         raise CrdRenderError(f"No CustomResourceDefinition documents found in {source_path}")
 
-    matches = []
-    for crd in crds:
-        spec = crd.get("spec") or {}
-        crd_group = spec.get("group")
-        crd_kind = (spec.get("names") or {}).get("kind")
-        if group and group != crd_group:
-            continue
-        if kind and kind != crd_kind:
-            continue
-        matches.append(crd)
-
-    if not matches:
-        selector = _selector_text(group=group, kind=kind, version=version)
-        raise CrdRenderError(f"No CRD matched {selector} in {source_path}")
-
-    if len(matches) > 1:
+    if len(crds) > 1:
         available = ", ".join(
             f"{(doc.get('spec') or {}).get('group')}/{((doc.get('spec') or {}).get('names') or {}).get('kind')}"
-            for doc in matches
+            for doc in crds
         )
-        selector = _selector_text(group=group, kind=kind, version=version)
-        raise CrdRenderError(f"Ambiguous CRD selection for {selector} in {source_path}: {available}")
+        raise CrdRenderError(
+            f"Multiple CustomResourceDefinition documents found in {source_path}. "
+            f"Keep one CRD per file. Found: {available}"
+        )
 
-    crd = matches[0]
+    crd = crds[0]
     spec = crd.get("spec") or {}
     selected_kind = (spec.get("names") or {}).get("kind")
     selected_group = spec.get("group")
@@ -381,7 +364,7 @@ def _render_view(view: CrdView, *, title: str | None, collapsed: bool) -> str:
     if not collapsed:
         return viewer_html
 
-    summary = html.escape(f"{display_title} reference")
+    summary = html.escape(display_title)
     return f"""
 <details class="crd-viewer__wrapper">
   <summary>{summary}</summary>
@@ -523,14 +506,3 @@ def _node_id(*, viewer_id: str, path: str) -> str:
     path = path.replace("[]", "-items").replace(".*", "-key")
     slug = re.sub(r"[^a-zA-Z0-9]+", "-", path).strip("-").lower()
     return f"{viewer_id}-{slug}"
-
-
-def _selector_text(*, group: str | None, kind: str | None, version: str | None) -> str:
-    parts = []
-    if group:
-        parts.append(f"group={group!r}")
-    if kind:
-        parts.append(f"kind={kind!r}")
-    if version:
-        parts.append(f"version={version!r}")
-    return ", ".join(parts) if parts else "the provided selectors"

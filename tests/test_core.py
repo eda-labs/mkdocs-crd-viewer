@@ -59,7 +59,7 @@ def test_load_crd_view_selects_storage_version(tmp_path: Path) -> None:
     assert view.sections[0].children[0].field_type == "integer"
 
 
-def test_load_crd_view_requires_disambiguation_for_multiple_crds(tmp_path: Path) -> None:
+def test_load_crd_view_rejects_multiple_crds_in_single_file(tmp_path: Path) -> None:
     source = tmp_path / "example.yaml"
     write_file(
         source,
@@ -106,11 +106,8 @@ def test_load_crd_view_requires_disambiguation_for_multiple_crds(tmp_path: Path)
         """,
     )
 
-    with pytest.raises(CrdRenderError):
+    with pytest.raises(CrdRenderError, match="Multiple CustomResourceDefinition documents found"):
         load_crd_view(source)
-
-    view = load_crd_view(source, kind="Gadget")
-    assert view.kind == "Gadget"
 
 
 def test_render_crd_viewer_outputs_spec_status_and_metadata(tmp_path: Path) -> None:
@@ -162,7 +159,7 @@ def test_render_crd_viewer_outputs_spec_status_and_metadata(tmp_path: Path) -> N
 
     assert "SPEC" in html
     assert "STATUS" in html
-    assert "Widget reference" in html
+    assert "<summary>Widget</summary>" in html
     assert "Selected size." in html
     assert "enum" in html
     assert "&lt;key&gt;" in html

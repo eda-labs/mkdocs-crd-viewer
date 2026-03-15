@@ -31,22 +31,34 @@ def test_demo_site_builds(tmp_path: Path) -> None:
     soup = BeautifulSoup(html, "html.parser")
 
     viewers = soup.select("[data-crd-viewer-root]")
-    assert len(viewers) == 2
-    assert len({viewer.get("id") for viewer in viewers}) == 2
+    assert len(viewers) >= 5
+    assert len({viewer.get("id") for viewer in viewers}) == len(viewers)
 
-    # First viewer: full inline with spec + status
-    inline_viewer = viewers[0]
-    assert inline_viewer.select_one("[data-crd-toggle-all]") is not None
-    assert "SPEC" in inline_viewer.get_text()
-    assert "STATUS" in inline_viewer.get_text()
-    assert "Fabric" in inline_viewer.get_text()
-    assert "items" not in inline_viewer.get_text()
+    # Top viewer: full inline with spec + status
+    top_viewer = viewers[0]
+    assert top_viewer.select_one("[data-crd-toggle-all]") is not None
+    assert "SPEC" in top_viewer.get_text()
+    assert "STATUS" in top_viewer.get_text()
+    assert "Fabric" in top_viewer.get_text()
+    assert "items" not in top_viewer.get_text()
 
-    # Second viewer: collapsed, spec only (show_status=False)
+    # Settings preview includes a pinned version example.
+    pinned_viewer = next((viewer for viewer in viewers if "Pinned version: v1alpha1" in viewer.get_text()), None)
+    assert pinned_viewer is not None
+    assert "STATUS" in pinned_viewer.get_text()
+
+    # Spec-only examples should not render STATUS.
+    spec_only_viewers = [viewer for viewer in viewers if "Spec only" in viewer.get_text()]
+    assert spec_only_viewers
+    for viewer in spec_only_viewers:
+        assert "STATUS" not in viewer.get_text()
+
+    # Collapsed render should exist and be spec-only.
     collapsed_wrapper = soup.select_one("details.crd-viewer__wrapper")
     assert collapsed_wrapper is not None
     collapsed_viewer = collapsed_wrapper.select_one("[data-crd-viewer-root]")
     assert collapsed_viewer is not None
+    assert "Collapsed + spec only" in collapsed_viewer.get_text()
     assert "SPEC" in collapsed_viewer.get_text()
     assert "STATUS" not in collapsed_viewer.get_text()
 
