@@ -1,0 +1,57 @@
+site_name: MkDocs CRD Plugin
+site_description: Render Kubernetes CRD schemas as interactive, expandable tree views
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: deep purple
+      accent: cyan
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: deep purple
+      accent: cyan
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Inter
+    code: JetBrains Mono
+  features:
+    - navigation.top
+    - navigation.sections
+    - navigation.footer
+    - search.suggest
+    - content.code.copy
+    - content.code.annotate
+    - content.tooltips
+    - toc.follow
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+  - crd-viewer
+  - macros:
+      j2_block_start_string: "-{{%"
+      j2_block_end_string: "%}}-"
+      j2_variable_start_string: "-{{"
+      j2_variable_end_string: "}}-"
+      modules:
+        - mkdocs_crd_plugin.macros

@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling>=1.25.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mkdocs-crd-plugin"
+version = "0.1.0"
+description = "MkDocs plugin and macros helper for rendering Kubernetes CRD schemas as interactive trees."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+authors = [
+  { name = "OpenAI Codex" },
+]
+dependencies = [
+  "mkdocs>=1.6,<2.0",
+  "mkdocs-macros-plugin>=1.0,<2.0",
+  "PyYAML>=6.0,<7.0",
+]
+
+[dependency-groups]
+dev = [
+  "beautifulsoup4>=4.12,<5.0",
+  "mkdocs-material>=9.5,<10.0",
+  "pytest>=8.0,<9.0",
+]
+
+[project.entry-points."mkdocs.plugins"]
+crd-viewer = "mkdocs_crd_plugin.plugin:CrdViewerPlugin"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

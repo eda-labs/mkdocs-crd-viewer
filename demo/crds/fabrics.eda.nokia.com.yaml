@@ -1,0 +1,121 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: fabrics.fabrics.eda.nokia.com
+spec:
+  group: fabrics.eda.nokia.com
+  names:
+    kind: Fabric
+    plural: fabrics
+    singular: fabric
+  scope: Namespaced
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              description: FabricSpec defines the desired state of a Fabric.
+              required:
+                - leafs
+                - spines
+                - interSwitchLinks
+                - underlayProtocol
+                - overlayProtocol
+              properties:
+                leafs:
+                  type: object
+                  description: Selection rules for all leaf nodes that belong to the fabric.
+                  required:
+                    - leafNodeSelector
+                  properties:
+                    leafNodeSelector:
+                      type: array
+                      description: Label selectors used to pick leaf nodes.
+                      items:
+                        type: string
+                spines:
+                  type: object
+                  description: Selection rules for all spine nodes that belong to the fabric.
+                  required:
+                    - spineNodeSelector
+                  properties:
+                    spineNodeSelector:
+                      type: array
+                      description: Label selectors used to pick spine nodes.
+                      items:
+                        type: string
+                interSwitchLinks:
+                  type: object
+                  description: Inter-switch link policy applied between selected leaf and spine nodes.
+                  required:
+                    - linkSelector
+                  properties:
+                    linkSelector:
+                      type: array
+                      description: Label selectors used to pick inter-switch links.
+                      items:
+                        type: string
+                    unnumbered:
+                      type: string
+                      enum:
+                        - IPV4
+                        - IPV6
+                      description: Address family used for unnumbered links.
+                systemPoolIPV4:
+                  type: string
+                  description: IPv4 pool used for system address allocation.
+                underlayProtocol:
+                  type: object
+                  description: Underlay routing protocol configuration.
+                  required:
+                    - protocol
+                  properties:
+                    protocol:
+                      type: array
+                      description: Enabled underlay protocols.
+                      items:
+                        type: string
+                        enum:
+                          - EBGP
+                    bgp:
+                      type: object
+                      description: BGP-specific underlay settings.
+                      properties:
+                        asnPool:
+                          type: string
+                          description: ASN pool used for underlay BGP allocation.
+                overlayProtocol:
+                  type: object
+                  description: Overlay routing protocol configuration.
+                  required:
+                    - protocol
+                  properties:
+                    protocol:
+                      type: string
+                      enum:
+                        - EBGP
+                      description: Overlay protocol selected for the fabric.
+            status:
+              type: object
+              description: FabricStatus defines the observed state of the Fabric.
+              properties:
+                operationalState:
+                  type: string
+                  description: High-level operational state of the fabric.
+                lastChange:
+                  type: string
+                  format: date-time
+                  description: Time of the most recent observed state change.
+                leafCount:
+                  type: integer
+                  minimum: 0
+                  description: Number of leaf nodes currently attached to the fabric.
+                spineCount:
+                  type: integer
+                  minimum: 0
+                  description: Number of spine nodes currently attached to the fabric.
