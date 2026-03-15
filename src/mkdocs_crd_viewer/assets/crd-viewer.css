@@ -340,6 +340,13 @@
   color: var(--crd-primary);
 }
 
+/* ── Hash-navigation highlight ────────────────────────────────── */
+.crd-viewer__row--highlight {
+  background-color: color-mix(in srgb, var(--crd-primary) 18%, transparent);
+  border-radius: var(--crd-radius-sm);
+  transition: background-color 0.6s ease-out;
+}
+
 /* ── Body (description + facts) ───────────────────────────────── */
 .crd-viewer__body {
   margin: 0 0.625rem 0.5rem 2.375rem;
