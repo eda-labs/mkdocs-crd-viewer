@@ -34,16 +34,16 @@
 }
 
 /* ── Collapsed mode ──────────────────────────────────────────── */
-.crd-viewer[data-crd-collapsible] > .crd-viewer__header {
+.crd-viewer[data-crd-collapsible]>.crd-viewer__header {
   cursor: pointer;
 }
 
-.crd-viewer[data-crd-collapsed="true"] > .crd-viewer__header {
+.crd-viewer[data-crd-collapsed="true"]>.crd-viewer__header {
   border-bottom: none;
 }
 
-.crd-viewer[data-crd-collapsed="true"] > .crd-viewer__section,
-.crd-viewer[data-crd-collapsed="true"] > .crd-viewer__header > .crd-viewer__toggle {
+.crd-viewer[data-crd-collapsed="true"]>.crd-viewer__section,
+.crd-viewer[data-crd-collapsed="true"]>.crd-viewer__header>.crd-viewer__toggle {
   display: none;
 }
 
@@ -130,7 +130,7 @@
   padding: 0.75rem;
 }
 
-.crd-viewer__section + .crd-viewer__section {
+.crd-viewer__section+.crd-viewer__section {
   border-top: 1px solid var(--crd-border);
 }
 
@@ -185,27 +185,21 @@
   border-left: 1px solid var(--crd-border);
 }
 
-.crd-viewer__item + .crd-viewer__item {
-  margin-top: 0.25rem;
+.crd-viewer__item+.crd-viewer__item {
+  margin-top: 0;
 }
 
 /* ── Node (expandable) & Leaf ─────────────────────────────────── */
 .crd-viewer__node,
 .crd-viewer__item--leaf {
-  border: 1px solid var(--crd-border);
+  border: none;
   border-radius: var(--crd-radius-sm);
   background: var(--crd-surface);
   padding: 0;
-  transition: border-color var(--crd-transition), box-shadow var(--crd-transition);
-}
-
-.crd-viewer__node:hover,
-.crd-viewer__item--leaf:hover {
-  border-color: var(--crd-border-strong);
+  transition: box-shadow var(--crd-transition);
 }
 
 .crd-viewer__node[data-open="true"] {
-  border-color: var(--crd-border-strong);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
@@ -221,7 +215,7 @@
   grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 0.5rem;
   align-items: center;
-  padding: 0.5rem 2rem 0.5rem 0.625rem;
+  padding: 0.3rem 2rem 0.3rem 0.625rem;
   cursor: default;
 }
 
@@ -272,7 +266,7 @@
   transition: transform var(--crd-transition);
 }
 
-.crd-viewer__node[data-open="true"] > .crd-viewer__row .crd-viewer__chevron::before {
+.crd-viewer__node[data-open="true"]>.crd-viewer__row .crd-viewer__chevron::before {
   transform: translate(-50%, -60%) rotate(45deg);
 }
 
@@ -281,7 +275,7 @@
   min-width: 0;
   overflow-wrap: break-word;
   font-family: var(--md-code-font-family, monospace);
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 500;
   line-height: 1.3;
   color: var(--crd-text);
@@ -301,7 +295,7 @@
   background: var(--crd-chip-bg);
   border: 1px solid var(--crd-chip-border);
   color: var(--crd-chip-text);
-  font-size: 0.65rem;
+  font-size: 0.55rem;
   font-weight: 600;
   font-family: var(--md-code-font-family, monospace);
   white-space: nowrap;
