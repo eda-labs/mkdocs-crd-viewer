@@ -1,1 +1,0 @@
-- [feedback_use_uv.md](feedback_use_uv.md) - Use uv, not pip, for Python tooling
